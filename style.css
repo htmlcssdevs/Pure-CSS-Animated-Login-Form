@@ -1,0 +1,742 @@
+/* ==========================================================================
+       1. CSS DESIGN TOKENS & RESET
+       ========================================================================== */
+    :root {
+      --bg-dark: #070913;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --input-bg: rgba(10, 15, 30, 0.7);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --input-focus: #818cf8;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --accent-glow: 0 0 25px rgba(99, 102, 241, 0.55);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 24px;
+      --radius-pill: 9999px;
+      --transition-base: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-stack);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* */
+
+    /* ==========================================================================
+       2. AMBIENT BACKGROUND & NEON FLOATING ORBS
+       ========================================================================== */
+    .bg-mesh-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 1;
+      animation: gridPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes gridPulse {
+      0% { opacity: 0.4; }
+      100% { opacity: 0.85; }
+    }
+
+    .ambient-orbs-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation-iteration-count: infinite;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      animation-direction: alternate;
+    }
+
+    .orb-1 {
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+      top: -10%;
+      left: 10%;
+      animation-name: floatOrb1;
+      animation-duration: 18s;
+    }
+
+    .orb-2 {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+      bottom: -10%;
+      right: 10%;
+      animation-name: floatOrb2;
+      animation-duration: 22s;
+    }
+
+    .orb-3 {
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+      top: 45%;
+      right: 25%;
+      animation-name: floatOrb3;
+      animation-duration: 16s;
+    }
+
+    @keyframes floatOrb1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(70px, 60px) scale(1.15); }
+    }
+    @keyframes floatOrb2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-80px, -60px) scale(1.1); }
+    }
+    @keyframes floatOrb3 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, -70px) scale(1.2); }
+    }
+
+    /* */
+
+    /* ==========================================================================
+       3. GLASSMORPHISM CARD & DYNAMIC ROTATING GLOW BORDER
+       ========================================================================== */
+    .auth-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 450px;
+      z-index: 10;
+      animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(32px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Glowing border wrapper */
+    .glowing-border-wrap {
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 1.5px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+    }
+
+    .glowing-border-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(
+        transparent,
+        #6366f1,
+        #ec4899,
+        #06b6d4,
+        transparent 60%
+      );
+      animation: rotateBorder 9s linear infinite;
+    }
+
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .glass-card {
+      position: relative;
+      background: var(--card-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-radius: calc(var(--radius-lg) - 1.5px);
+      padding: 2.25rem 2rem;
+      border: 1px solid var(--card-border);
+    }
+
+    /* Header & Branding */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brand-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-md);
+      background: var(--accent-gradient);
+      box-shadow: 0 10px 25px -4px rgba(99, 102, 241, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+      transition: transform var(--transition-base);
+    }
+
+    .brand-icon:hover {
+      transform: scale(1.08) rotate(5deg);
+    }
+
+    .brand-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: #ffffff;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+    }
+
+    .brand-subtitle {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    /* */
+
+    /* ==========================================================================
+       4. PURE CSS RADIO TAB NAVIGATION MECHANICS
+       ========================================================================== */
+    /* Hidden radios driving tab switching */
+    .tab-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .tab-bar {
+      position: relative;
+      background: rgba(10, 15, 30, 0.85);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      display: flex;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-label {
+      flex: 1;
+      text-align: center;
+      padding: 0.65rem 0.5rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      transition: color var(--transition-base);
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .tab-slider-pill {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      background: var(--accent-gradient);
+      border-radius: calc(var(--radius-md) - 3px);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      transition: transform var(--transition-base);
+      z-index: 1;
+    }
+
+    /* Active tab animations driven by #mode-signin and #mode-signup */
+    #mode-signin:checked ~ .auth-wrapper .tab-label[for="mode-signin"] {
+      color: #ffffff;
+    }
+
+    #mode-signup:checked ~ .auth-wrapper .tab-label[for="mode-signup"] {
+      color: #ffffff;
+    }
+
+    #mode-signup:checked ~ .auth-wrapper .tab-slider-pill {
+      transform: translateX(100%);
+    }
+
+    /* Sliding form view track */
+    .forms-viewport {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .forms-track {
+      display: flex;
+      width: 200%;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .form-panel {
+      width: 50%;
+      flex-shrink: 0;
+      padding: 0 2px;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    /* Trigger slide track and panel activation purely through CSS */
+    #mode-signin:checked ~ .auth-wrapper .forms-track {
+      transform: translateX(0%);
+    }
+    #mode-signin:checked ~ .auth-wrapper .panel-signin {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    #mode-signup:checked ~ .auth-wrapper .forms-track {
+      transform: translateX(-50%);
+    }
+    #mode-signup:checked ~ .auth-wrapper .panel-signup {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    /* Switch subtitle text via CSS */
+    #mode-signin:checked ~ .auth-wrapper .subtitle-signin {
+      display: inline;
+    }
+    #mode-signin:checked ~ .auth-wrapper .subtitle-signup {
+      display: none;
+    }
+
+    #mode-signup:checked ~ .auth-wrapper .subtitle-signin {
+      display: none;
+    }
+    #mode-signup:checked ~ .auth-wrapper .subtitle-signup {
+      display: inline;
+    }
+
+    /* */
+
+    /* ==========================================================================
+       5. SOCIAL BUTTONS & SEPARATORS
+       ========================================================================== */
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition-base);
+    }
+
+    .social-btn:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .social-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .form-divider {
+      position: relative;
+      text-align: center;
+      margin: 1.25rem 0;
+    }
+
+    .form-divider::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-divider span {
+      position: relative;
+      background: #0d1424;
+      padding: 0 0.8rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       6. PURE CSS FLOATING LABELS & INPUT CONTROLS
+       ========================================================================== */
+    .field-group {
+      position: relative;
+      margin-bottom: 1.15rem;
+    }
+
+    .input-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1.35rem 1rem 0.55rem 1rem;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.875rem;
+      outline: none;
+      transition: all var(--transition-base);
+    }
+
+    .form-input.has-eye {
+      padding-right: 2.75rem;
+    }
+
+    .form-input:focus {
+      border-color: var(--input-focus);
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Floating label animation based on :focus and :not(:placeholder-shown) */
+    .floating-label {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      transform-origin: left top;
+      transition: transform 0.22s ease, color 0.22s ease, font-size 0.22s ease;
+    }
+
+    .form-input:focus ~ .floating-label,
+    .form-input:not(:placeholder-shown) ~ .floating-label {
+      transform: translateY(-0.65rem) scale(0.78);
+      color: #a5b4fc;
+      font-weight: 600;
+    }
+
+    /* */
+
+    /* ==========================================================================
+       7. PURE CSS PASSWORD SHOW/HIDE TOGGLE VIA CHECKBOX HACK
+       ========================================================================== */
+    .pwd-toggle-checkbox {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pwd-toggle-label {
+      position: absolute;
+      right: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      padding: 4px;
+      border-radius: 4px;
+      transition: color var(--transition-base);
+      z-index: 3;
+    }
+
+    .pwd-toggle-label:hover {
+      color: var(--text-main);
+    }
+
+    .pwd-toggle-label svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Icon toggling via checkbox state */
+    .icon-eye-off {
+      display: none;
+    }
+
+    #show-pwd-signin:checked ~ .input-box .pwd-toggle-label .icon-eye {
+      display: none;
+    }
+    #show-pwd-signin:checked ~ .input-box .pwd-toggle-label .icon-eye-off {
+      display: block;
+    }
+
+    #show-pwd-signup:checked ~ .input-box .pwd-toggle-label .icon-eye {
+      display: none;
+    }
+    #show-pwd-signup:checked ~ .input-box .pwd-toggle-label .icon-eye-off {
+      display: block;
+    }
+
+    /* Visual feedback for show/hide toggle */
+    #show-pwd-signin:checked ~ .input-box .form-input,
+    #show-pwd-signup:checked ~ .input-box .form-input {
+      letter-spacing: 0.04em;
+    }
+
+    /* */
+
+    /* ==========================================================================
+       8. CHECKBOXES, HELPER LINKS & FOOTER
+       ========================================================================== */
+    .options-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      font-size: 0.775rem;
+    }
+
+    .custom-checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      -webkit-user-select: none;
+      user-select: none;
+      transition: color var(--transition-base);
+    }
+
+    .custom-checkbox:hover {
+      color: var(--text-main);
+    }
+
+    .checkbox-input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      width: 0;
+      height: 0;
+    }
+
+    .checkbox-mark {
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid var(--input-border);
+      border-radius: 4px;
+      background: var(--input-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-base);
+    }
+
+    .checkbox-mark svg {
+      width: 12px;
+      height: 12px;
+      stroke: #ffffff;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      transition: stroke-dashoffset 0.22s ease;
+    }
+
+    .checkbox-input:checked ~ .checkbox-mark {
+      background: #6366f1;
+      border-color: #6366f1;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.45);
+    }
+
+    .checkbox-input:checked ~ .checkbox-mark svg {
+      stroke-dashoffset: 0;
+    }
+
+    .text-link {
+      color: #818cf8;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.775rem;
+      transition: color var(--transition-base);
+    }
+
+    .text-link:hover {
+      color: #a5b4fc;
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       9. PURE CSS SUBMIT BUTTON & SHIMMER ANIMATION
+       ========================================================================== */
+    .btn-submit {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: var(--accent-gradient);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #ffffff;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.45);
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+
+    /* CSS Shimmer sweep across the button */
+    .btn-submit::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        rgba(255, 255, 255, 0) 20%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 80%
+      );
+      transform: rotate(25deg);
+      animation: btnShimmer 4.5s infinite;
+    }
+
+    @keyframes btnShimmer {
+      0%, 75% { left: -60%; }
+      100% { left: 140%; }
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -4px rgba(99, 102, 241, 0.65);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform var(--transition-base);
+    }
+
+    .btn-submit:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* Footer switch text */
+    .card-footer {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      text-align: center;
+      font-size: 0.775rem;
+      color: var(--text-muted);
+    }
+
+    .footer-action-label {
+      color: #818cf8;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 0.3rem;
+      transition: color var(--transition-base);
+    }
+
+    .footer-action-label:hover {
+      color: #a5b4fc;
+      text-decoration: underline;
+    }
+
+    #mode-signin:checked ~ .auth-wrapper .footer-signin-text {
+      display: inline;
+    }
+    #mode-signin:checked ~ .auth-wrapper .footer-signup-text {
+      display: none;
+    }
+
+    #mode-signup:checked ~ .auth-wrapper .footer-signin-text {
+      display: none;
+    }
+    #mode-signup:checked ~ .auth-wrapper .footer-signup-text {
+      display: inline;
+    }
+
+    /* Responsive scaling */
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem 0.75rem;
+      }
+      .glass-card {
+        padding: 1.75rem 1.25rem;
+      }
+      .social-grid {
+        grid-template-columns: 1fr;
+      }
+    }
